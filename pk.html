@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALIZA PRO | Elite Casino & Investment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --gold: #ffcc00;
+            --gold-gradient: linear-gradient(135deg, #ffcc00 0%, #b8860b 100%);
+            --bg: #050508;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-red: #ff3b30;
+            --success: #34c759;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: white; min-height: 100vh; overflow-x: hidden; }
+
+        /* --- NEW AUTH ANIMATIONS --- */
+        #authPage {
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(-45deg, #050508, #1a1a2e, #0a0a1a, #050508);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: fixed; width: 100%; z-index: 2000;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .auth-card {
+            background: rgba(20, 20, 25, 0.8);
+            backdrop-filter: blur(15px);
+            width: 400px; padding: 40px;
+            border-radius: 30px; 
+            border: 1px solid var(--glass-border); 
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* Entrance Animation */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cardAppear 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes cardAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-gold { 
+            background: var(--gold-gradient); color: #000; padding: 16px; border: none; 
+            border-radius: 14px; font-weight: 800; cursor: pointer; width: 100%; 
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+
+        /* Gold Shimmer Effect */
+        .btn-gold::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg); animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* --- REST OF STYLES --- */
+        input { 
+            width: 100%; padding: 16px; margin-bottom: 12px; background: rgba(0,0,0,0.4); 
+            border: 1px solid #333; color: white; border-radius: 14px; outline: none; font-size: 14px;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); }
+
+        #mainDashboard { display: none; min-height: 100vh; }
+        .sidebar {
+            width: 260px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border); padding: 30px 20px;
+            position: fixed; height: 100vh; z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: 800; color: var(--gold); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .nav-item { padding: 14px 18px; margin-bottom: 8px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #8e8e93; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: var(--glass); color: var(--gold); }
+        .main-content { margin-left: 260px; flex: 1; padding: 30px; width: calc(100% - 260px); }
+        .page { display: none; animation: fadeIn 0.5s ease forwards; }
+        .active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .vip-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 30px; border-radius: 24px; margin-bottom: 30px; position: relative; }
+        .invest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .invest-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; text-align: center; transition: 0.3s; }
+        .btn-locked { background: #222 !important; color: #555 !important; cursor: not-allowed; pointer-events: none; opacity: 0.5; }
+
+        @media (max-width: 900px) { .sidebar { width: 80px; } .sidebar span { display: none; } .main-content { margin-left: 80px; width: calc(100% - 80px); } }
+    </style>
+</head>
+<body>
+
+    <div id="authPage">
+        <div class="auth-card">
+            <h1 style="color:var(--gold); margin-bottom:5px; font-size: 32px;">ALIZA PRO</h1>
+            <p id="authSubtitle" style="color: #8e8e93; margin-bottom: 25px; font-size: 14px; letter-spacing: 1px;">PREMIUM INVESTMENT GATEWAY</p>
+            
+            <input type="text" id="userInput" placeholder="Username or Email">
+            <div id="extraFields">
+                <input type="email" id="emailInput" placeholder="Confirm Email Address">
+            </div>
+            <input type="password" id="passInput" placeholder="Password">
+            
+            <button class="btn-gold" id="authBtn" onclick="handleAuthAction()">CREATE ACCOUNT</button>
+            
+            <p style="margin-top:20px; font-size:12px; color:#8e8e93;">
+                <span id="toggleText">Already have an account?</span> 
+                <span style="color:var(--gold); cursor:pointer; font-weight:bold; text-transform: uppercase;" onclick="toggleAuth()">Click here</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="mainDashboard">
+        <aside class="sidebar">
+            <div class="logo"><i data-lucide="crown"></i> <span>ALIZA</span></div>
+            <div class="nav-item active" onclick="showPage('home', this)"><i data-lucide="layout"></i> <span>Dashboard</span></div>
+            <div class="nav-item" onclick="showPage('aviator', this)"><i data-lucide="plane"></i> <span>Aviator</span></div>
+            <div class="nav-item" onclick="showPage('deposit', this)"><i data-lucide="plus-square"></i> <span>Deposit</span></div>
+            <div class="nav-item" onclick="showPage('withdraw', this)"><i data-lucide="arrow-up-right"></i> <span>Withdraw</span></div>
+            <div class="nav-item" onclick="showPage('support', this)"><i data-lucide="headphones"></i> <span>Support Team</span></div>
+            <div class="nav-item" style="margin-top: auto;" onclick="location.reload()"><i data-lucide="log-out"></i> <span>Logout</span></div>
+        </aside>
+
+        <main class="main-content">
+            <section id="home" class="page active-page">
+                <div class="vip-card">
+                    <p style="color:var(--gold); font-size:12px; font-weight:800; letter-spacing:1px;">AVAILABLE BALANCE</p>
+                    <h1 id="mainBal" style="font-size: 52px;">$30.00</h1>
+                    <div id="bonusStatus" style="color:var(--accent-red); font-size:12px; font-weight:700; margin-top:5px;">
+                        <i data-lucide="lock" style="width:12px;"></i> WITHDRAWAL LOCKED (Deposit to Unlock)
+                    </div>
+                </div>
+                <h3 style="margin-bottom: 20px;">Elite Tiers</h3>
+                <div class="invest-grid" id="investGrid"></div>
+            </section>
+
+            <section id="support" class="page">
+                <div class="vip-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+                    <i data-lucide="headphones" style="width: 50px; height: 50px; color: var(--gold); margin-bottom: 20px;"></i>
+                    <h2>Aliza Support</h2>
+                    <div style="display: grid; gap: 15px; margin-top: 25px;">
+                        <a href="https://t.me/Aliza_Support" target="_blank" class="btn-gold" style="background: #0088cc; color: white; text-decoration: none;">Telegram</a>
+                        <a href="https://wa.me/your_number" target="_blank" class="btn-gold" style="background: #25D366; color: white; text-decoration: none;">WhatsApp</a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="deposit" class="page">
+                <div class="vip-card" style="max-width: 550px; margin: 0 auto; text-align: center;">
+                    <h2 style="color:var(--gold);">Deposit USDT (TRC20)</h2>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=TRHhjCPvpKvES1UmeLz6hgevk1nE3nWWbK" style="background:white; padding:10px; border-radius:12px; margin:20px 0;">
+                    <div style="background:#000; padding:15px; border-radius:12px; border:1px dashed var(--gold); margin-bottom: 20px; color:var(--gold); font-family:monospace; font-size:12px;">
+                        TRHhjCPvpKvES1UmeLz6hgevk1nE3nWWbK
+                    </div>
+                    <input type="number" id="depAmt" placeholder="Amount Sent ($)">
+                    <button class="btn-gold" onclick="confirmDeposit()">SUBMIT TRANSACTION</button>
+                </div>
+            </section>
+
+            <section id="withdraw" class="page">
+                <div class="vip-card" style="max-width: 500px; margin: 0 auto;">
+                    <h2>Withdrawal</h2>
+                    <div id="witLockText" style="color:var(--accent-red); font-size:12px; margin-bottom:15px;">Deposit required to unlock.</div>
+                    <input type="number" id="witAmt" placeholder="Amount ($)">
+                    <input type="text" placeholder="Wallet Address">
+                    <button id="witBtn" class="btn-gold btn-locked" onclick="handleWithdraw()">PROCESS PAYOUT</button>
+                </div>
+            </section>
+
+            <section id="aviator" class="page">
+                <iframe src="https://demo.spribe.io/launch/aviator?currency=USD&lang=EN" style="width:100%; height:78vh; border-radius:24px; border:none;"></iframe>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let balance = 30.00;
+        let isLogin = false; 
+        let hasSubmittedDeposit = false;
+
+        function toggleAuth() {
+            const card = document.querySelector('.auth-card');
+            card.style.animation = 'none';
+            void card.offsetWidth; // Trigger reflow
+            card.style.animation = 'cardAppear 0.5s ease forwards';
+            
+            isLogin = !isLogin;
+            document.getElementById('authSubtitle').innerText = isLogin ? "SECURE ACCESS PORTAL" : "PREMIUM INVESTMENT GATEWAY";
+            document.getElementById('extraFields').style.display = isLogin ? "none" : "block";
+            document.getElementById('userInput').placeholder = isLogin ? "Username or Email" : "Choose Username";
+            document.getElementById('authBtn').innerText = isLogin ? "ACCESS DASHBOARD" : "CREATE ACCOUNT";
+            document.getElementById('toggleText').innerText = isLogin ? "New user?" : "Already have an account?";
+        }
+
+        function handleAuthAction() {
+            const user = document.getElementById('userInput').value;
+            const pass = document.getElementById('passInput').value;
+            if (user === "" || pass === "") { alert("Fill all details."); return; }
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'flex';
+        }
+
+        function showPage(pageId, navElement) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active-page');
+            if(navElement) navElement.classList.add('active');
+        }
+
+        const packages = [
+            {n: "Bronze", p: 10, r: "2.5%"}, {n: "Silver", p: 50, r: "3.5%"}, 
+            {n: "Gold", p: 100, r: "4.8%"}, {n: "Platinum", p: 500, r: "6.2%"}, 
+            {n: "Emerald", p: 1000, r: "8.0%"}, {n: "Ruby", p: 2500, r: "10.5%"},
+            {n: "Sapphire", p: 5000, r: "13.0%"}, {n: "Whale", p: 10000, r: "16.5%"},
+            {n: "Elite", p: 25000, r: "20.0%"}, {n: "Royal", p: 50000, r: "28.0%"}
+        ];
+
+        packages.forEach(pkg => {
+            document.getElementById('investGrid').innerHTML += `
+                <div class="invest-card">
+                    <p style="font-size:10px; color:#8e8e93;">${pkg.n}</p>
+                    <div style="color:var(--gold); font-size:24px; font-weight:800; margin:5px 0;">$${pkg.p}</div>
+                    <p style="color:var(--success); font-size:11px;">${pkg.r} Daily</p>
+                    <button class="btn-gold" style="padding:6px; font-size:11px;" onclick="invest(${pkg.p})">Activate</button>
+                </div>`;
+        });
+
+        function invest(amt) {
+            if(balance >= amt) alert("Success! Tier activated.");
+            else alert("Insufficient Balance.");
+        }
+
+        function confirmDeposit() {
+            let amt = document.getElementById('depAmt').value;
+            if(amt <= 0) return;
+            hasSubmittedDeposit = true;
+            alert("Payment submitted! Admin verifying. Withdrawal Unlocked.");
+            document.getElementById('witBtn').classList.remove('btn-locked');
+            document.getElementById('witLockText').style.display = 'none';
+            document.getElementById('bonusStatus').innerHTML = '<i data-lucide="check-circle" style="width:12px;"></i> WITHDRAWAL UNLOCKED';
+            document.getElementById('bonusStatus').style.color = 'var(--success)';
+            lucide.createIcons();
+        }
+
+        function handleWithdraw() {
+            let amt = parseFloat(document.getElementById('witAmt').value);
+            if(isNaN(amt) || amt < 10 || amt > balance) { alert("Check amount."); return; }
+            balance -= amt; 
+            document.getElementById('mainBal').innerText = "$" + balance.toFixed(2);
+            alert("Withdrawal of $" + amt + " processed.");
+        }
+    </script>
+</body>
+</html>
